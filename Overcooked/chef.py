@@ -5,7 +5,9 @@ class Chef:
         self.x = x
         self.y = y
         # La tupla es (banco_imagen, x_inicial, y_inicial, tamaño_horizontal, tamaño_vertical)
-        self.imagen = (0, 0, 0, 16, 16)
+        # El atributo imagen va a contener distintas posicion que son las que representan cada accion 
+        # imagen[0] = abajo ; imagen[1] = arriba ; imagen[2] = izquierda ; imagen[3] = derecha
+        self.imagen = ((0, 0, 0, 16, 16), (0, 0, 16, 16, 16), (0, 0, 32, 16, 16), (0, 0, 48, 16, 16))
         valor = random.randint(0, 1)
         if valor == 1:
             self.tiene_plato = True
@@ -48,12 +50,12 @@ class Chef:
 
     @imagen.setter
     def imagen(self, imagen: tuple):
-        if not isinstance(imagen, tuple):
-            raise TypeError("La imagen debe ser una tupla con 5 elementos")
-        elif len(imagen) != 5:
-            raise ValueError("La imagen debe ser una tupla con 5 elementos")
-        else:
-            self.__imagen = imagen
+        for i in range(len(imagen)):
+            if not isinstance(imagen, tuple):
+                raise TypeError("La imagen debe ser una tupla con 5 elementos")
+            elif len(imagen[i]) != 5:
+                raise ValueError("La imagen debe ser una tupla con 5 elementos")
+        self.__imagen = imagen
 
     @tiene_plato.setter
     def tiene_plato(self, plato: bool):

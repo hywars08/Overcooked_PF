@@ -76,7 +76,17 @@ class Tablero:
         pyxel.cls(0)
         # Dibujando al chef. Los parámetros de pyxel.blt son (x, y, tupla_sprite)
         # El * se usa para desempaquetar la tupla del sprite
-        pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen)
+        # En función de que tecla estes pulsando se muestra un sprite u otro
+        if pyxel.btn(pyxel.KEY_A):
+            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[2])
+        elif pyxel.btn(pyxel.KEY_D):
+            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[3])
+        elif pyxel.btn(pyxel.KEY_W):
+            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[1])
+        elif pyxel.btn(pyxel.KEY_S):
+            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[0])
+        else:
+            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[0])
         # Un texto para mostrar la posición del chef, los parámetros de
         # pyxel.text son (x, y, texto, color)
         pyxel.text(10, 10, f"({self.chef.x}, {self.chef.y})", 7)
