@@ -4,13 +4,7 @@ class Chef:
     def __init__(self, x: int, y: int):
         self.x = x
         self.y = y
-        # El sprite inicial será siempre el mismo, así que no se necesita parámetro
-        # En Pyxel la imagen es una tupla con las coordenadas de la imagen en
-        # el banco de imágenes.
-        # La tupla es (banco_imagen, x_inicial, y_inicial, tamaño_horizontal,
-        # tamaño_vertical)
-        # Sería buena idea hacer que el sprite sea de solo lectura, veremos cómo
-        # hacerlo en próximas clases
+        # La tupla es (banco_imagen, x_inicial, y_inicial, tamaño_horizontal, tamaño_vertical)
         self.imagen = (0, 0, 0, 16, 16)
         valor = random.randint(0, 1)
         if valor == 1:
@@ -67,5 +61,22 @@ class Chef:
             raise TypeError("El atributo tiene_plato debe ser booleano")
         else:
             self.__tiene_plato = plato
+            
+    # Método que controla el movimiento del chef
+    def mover(self, mover_x: int, mover_y: int, ancho_tablero: int, alto_tablero: int):
+        # Calculamos la posición a la que intenta ir
+        posicion_nueva_x = self.x + mover_x
+        posicion_nueva_y = self.y + mover_y
+
+        # Asignar la nueva posicion calculada y controlar que no se salga de la pantalla
+        # La función máx se encarga de asegurar que el valor de la posición nunca baja de 0 (no se salga de la pantalla)
+        # Comprobar si la poscion se ha salido o no de la pantalla (hay que restarle 16 porque es el tamaño del sprite) 
+        if posicion_nueva_x > ancho_tablero - 16:
+            posicion_nueva_x = ancho_tablero - 16 
+        if posicion_nueva_y > alto_tablero - 16:
+            posicion_nueva_y = alto_tablero - 16
+        self.x = max(0, posicion_nueva_x)
+        self.y = max(0, posicion_nueva_y)
+
 
     

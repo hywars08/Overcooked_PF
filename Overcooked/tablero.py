@@ -56,6 +56,17 @@ class Tablero:
         if pyxel.btn(pyxel.KEY_Q):
             pyxel.quit()
 
+        # Movimiento del chef
+        velocidad = 2
+
+        if pyxel.btn(pyxel.KEY_A):
+            self.chef.mover(-velocidad, 0, self.ancho, self.alto)
+        if pyxel.btn(pyxel.KEY_D):
+            self.chef.mover(velocidad, 0, self.ancho, self.alto)
+        if pyxel.btn(pyxel.KEY_W):
+            self.chef.mover(0, -velocidad, self.ancho, self.alto)
+        if pyxel.btn(pyxel.KEY_S):
+            self.chef.mover(0, velocidad, self.ancho, self.alto)
     def dibujar(self):
         """Este es el método de pyxel que se ejecuta en cada iteración del
         juego (cada fotograma). Aquí debes poner todo el código para dibujar
