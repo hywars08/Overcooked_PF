@@ -6,42 +6,48 @@ from casilla import Casilla
 
 class Tablero:
     def __init__(self, ancho: int, alto: int):
+        # Declaración de constantes
+        TAMANO_CASILLA = 16 # SOn 16 píxeles
+
+        # Estableciendo los atributos
+        self.ancho = ancho # Ancho del tablero
+        self.alto = alto # Alto del tablero
+
         # El mapa va a ser una matriz, y en función del número que tenga las casillas sera un "objeto" u otro
         # Diccionario que guarde que significa cada número de la matriz -> (tupla_sprite, es_transitable) # 
-        CONFIG_CELDAS = {
+        TIPO_CELDAS = {
             0: ((0, 32, 16, 16, 16), True),    # Suelo (se puede caminar)
+            1: ((0, 32, 0, 16, 16), False),
             # TODO
         }
         self.mapa = [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Fila 0
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],  # Fila 0
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Fila 1
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Fila 2
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Fila 3
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Fila 4
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],  # Fila 4
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Fila 5
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Fila 6
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Fila 7
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   # Fila 8
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]   # Fila 8
         ]
         # Transformamos la matriz de números en una matriz de objetos Casilla
         self.casillas = []
         for i in range(len(self.mapa)):
             fila_objetos = []
             for j in range(len(self.mapa[i])):
-                sprite = CONFIG_CELDAS[self.mapa[i][j]][0] # Pillar la tupla del sprite en funcion de la casilla que se encuentre
-                es_transitable = CONFIG_CELDAS[self.mapa[i][j]][1] # Pillar si 
-                nueva_casilla = Casilla(i, j, self.mapa[i][j], sprite, es_transitable)
+                sprite = TIPO_CELDAS[self.mapa[i][j]][0] # Pillar la tupla del sprite en funcion de la casilla que se encuentre en la matriz
+                es_transitable = TIPO_CELDAS[self.mapa[i][j]][1] # Pillar si se va a poder caminar o no
+                nueva_casilla = Casilla(i, j, self.mapa[i][j], sprite, es_transitable) 
                 fila_objetos.append(nueva_casilla)
             self.casillas.append(fila_objetos)
-        # Estableciendo los atributos
-        self.ancho = ancho # Ancho del tablero
-        self.alto = alto # Alto del tablero
-        self.chef = Chef(self.ancho // 2, self.alto // 2)
+
+        self.chef = Chef(1, 4) # Posición inicial del chef, por defecto mira hacia abajo
 
         # En este init también necesitamos inicializar pyxel
         # Esta instrucción se usa para inicializar pyxel, consulta la API para
         # ver más parámetros
-        pyxel.init(self.ancho, self.alto, title="Overcooked en pyxel",display_scale=4)
+        pyxel.init(self.ancho * TAMANO_CASILLA, self.alto * TAMANO_CASILLA, title="Overcooked en pyxel",display_scale=4, fps= 8)
 
         # Cargando el archivo pyxres con las imágenes
         pyxel.load("assets/my_resource.pyxres")
@@ -87,16 +93,16 @@ class Tablero:
             pyxel.quit()
 
         # Movimiento del chef
-        velocidad = 2
+        
 
-        if pyxel.btn(pyxel.KEY_A): # Velocidad negativa porque se mueve hacia la izquierda en las x
-            self.chef.mover(-velocidad, 0, self.ancho, self.alto)
+        if pyxel.btn(pyxel.KEY_A): 
+            self.chef.mover("izquierda", self.ancho, self.alto)
         if pyxel.btn(pyxel.KEY_D): # Velocidad positiva porque se mueve hacia la derecha en las x
-            self.chef.mover(velocidad, 0, self.ancho, self.alto)
+            self.chef.mover("derecha", self.ancho, self.alto)
         if pyxel.btn(pyxel.KEY_W): # Velocidad negativa porque se mueve hacia arriba en las y (este eje va al reves)
-            self.chef.mover(0, -velocidad, self.ancho, self.alto)
+            self.chef.mover("arriba", self.ancho, self.alto)
         if pyxel.btn(pyxel.KEY_S): # Velocidad positiva porque se mueve hacia abajo en las y (este eje va al reves)
-            self.chef.mover(0, velocidad, self.ancho, self.alto)
+            self.chef.mover("abajo", self.ancho, self.alto)
 
     def dibujar(self):
         """Este es el método de pyxel que se ejecuta en cada iteración del
@@ -114,19 +120,19 @@ class Tablero:
         # El * se usa para desempaquetar la tupla del sprite
         # En función de que tecla estes pulsando se muestra un sprite u otro
         if pyxel.btn(pyxel.KEY_A):
-            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[2], 8) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
+            pyxel.blt(self.chef.x_pixel, self.chef.y_pixel, *self.chef.imagen[2], 8) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
             self.chef.guardar_movimiento = 2
         elif pyxel.btn(pyxel.KEY_D):
-            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[3], 8) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
+            pyxel.blt(self.chef.x_pixel, self.chef.y_pixel, *self.chef.imagen[3], 8) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
             self.chef.guardar_movimiento = 3
         elif pyxel.btn(pyxel.KEY_W):
-            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[1], 8) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
+            pyxel.blt(self.chef.x_pixel, self.chef.y_pixel, *self.chef.imagen[1], 8) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
             self.chef.guardar_movimiento = 1
-        elif pyxel.btn(pyxel.KEY_S): # Si tocas la tecla 6 
-            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[0], 8) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
+        elif pyxel.btn(pyxel.KEY_S):  
+            pyxel.blt(self.chef.x_pixel, self.chef.y_pixel, *self.chef.imagen[0], 8) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
             self.chef.guardar_movimiento = 0
         else:
-            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[self.chef.guardar_movimiento], 8) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
+            pyxel.blt(self.chef.x_pixel, self.chef.y_pixel, *self.chef.imagen[self.chef.guardar_movimiento], 8) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
 
         
         # Un texto para mostrar la posición del chef, los parámetros de

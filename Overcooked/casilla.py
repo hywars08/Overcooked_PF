@@ -1,7 +1,6 @@
 # Clase que controla las casillas del mapa
 import pyxel
 
-
 class Casilla:
     TAMANO = 16
 
