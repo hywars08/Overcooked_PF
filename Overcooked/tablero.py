@@ -9,7 +9,7 @@ class Tablero:
         # El mapa va a ser una matriz, y en función del número que tenga las casillas sera un "objeto" u otro
         # Diccionario que guarde que significa cada número de la matriz -> (tupla_sprite, es_transitable) # 
         CONFIG_CELDAS = {
-            0: ((1, 0, 0, 16, 16), True),    # Suelo (se puede caminar)
+            0: ((0, 32, 16, 16, 16), True),    # Suelo (se puede caminar)
             # TODO
         }
         self.mapa = [
@@ -29,7 +29,7 @@ class Tablero:
             fila_objetos = []
             for j in range(len(self.mapa[i])):
                 sprite = CONFIG_CELDAS[self.mapa[i][j]][0] # Pillar la tupla del sprite en funcion de la casilla que se encuentre
-                es_transitable = CONFIG_CELDAS[self.mapa[i][j][1]] # Pillar si 
+                es_transitable = CONFIG_CELDAS[self.mapa[i][j]][1] # Pillar si 
                 nueva_casilla = Casilla(i, j, self.mapa[i][j], sprite, es_transitable)
                 fila_objetos.append(nueva_casilla)
             self.casillas.append(fila_objetos)
@@ -109,24 +109,24 @@ class Tablero:
         for fila in self.casillas:
             for casilla in fila:
                 casilla.dibujar()
-                
+
         # Dibujando al chef. Los parámetros de pyxel.blt son (x, y, tupla_sprite)
         # El * se usa para desempaquetar la tupla del sprite
         # En función de que tecla estes pulsando se muestra un sprite u otro
         if pyxel.btn(pyxel.KEY_A):
-            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[2])
+            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[2], 0) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
             self.chef.guardar_movimiento = 2
         elif pyxel.btn(pyxel.KEY_D):
-            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[3])
+            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[3], 0) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
             self.chef.guardar_movimiento = 3
         elif pyxel.btn(pyxel.KEY_W):
-            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[1])
+            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[1], 0) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
             self.chef.guardar_movimiento = 1
         elif pyxel.btn(pyxel.KEY_S): # Si tocas la tecla 6 
-            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[0])
+            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[0], 0) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
             self.chef.guardar_movimiento = 0
         else:
-            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[self.chef.guardar_movimiento]) 
+            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[self.chef.guardar_movimiento], 0) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
 
         
         # Un texto para mostrar la posición del chef, los parámetros de
