@@ -8,6 +8,7 @@ class Chef:
         # El atributo imagen va a contener distintas posicion que son las que representan cada accion 
         # imagen[0] = abajo ; imagen[1] = arriba ; imagen[2] = izquierda ; imagen[3] = derecha
         self.imagen = ((0, 0, 0, 16, 16), (0, 0, 16, 16, 16), (0, 0, 32, 16, 16), (0, 0, 48, 16, 16))
+        self.guardar_movimiento = 0 # Atributo que guarda el último movimiento el chef registrado 
         valor = random.randint(0, 1)
         if valor == 1:
             self.tiene_plato = True
@@ -66,6 +67,9 @@ class Chef:
             
     # Método que controla el movimiento del chef
     def mover(self, mover_x: int, mover_y: int, ancho_tablero: int, alto_tablero: int):
+        # Declaración de constantes
+        TAMAÑO_IMAGEN = 16 
+
         # Calculamos la posición a la que intenta ir
         posicion_nueva_x = self.x + mover_x
         posicion_nueva_y = self.y + mover_y
@@ -73,10 +77,10 @@ class Chef:
         # Asignar la nueva posicion calculada y controlar que no se salga de la pantalla
         # La función máx se encarga de asegurar que el valor de la posición nunca baja de 0 (no se salga de la pantalla)
         # Comprobar si la poscion se ha salido o no de la pantalla (hay que restarle 16 porque es el tamaño del sprite) 
-        if posicion_nueva_x > ancho_tablero - 16:
-            posicion_nueva_x = ancho_tablero - 16 
-        if posicion_nueva_y > alto_tablero - 16:
-            posicion_nueva_y = alto_tablero - 16
+        if posicion_nueva_x > ancho_tablero - TAMAÑO_IMAGEN:
+            posicion_nueva_x = ancho_tablero - TAMAÑO_IMAGEN 
+        if posicion_nueva_y > alto_tablero - TAMAÑO_IMAGEN:
+            posicion_nueva_y = alto_tablero - TAMAÑO_IMAGEN
         self.x = max(0, posicion_nueva_x)
         self.y = max(0, posicion_nueva_y)
 
