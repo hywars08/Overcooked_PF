@@ -114,19 +114,19 @@ class Tablero:
         # El * se usa para desempaquetar la tupla del sprite
         # En función de que tecla estes pulsando se muestra un sprite u otro
         if pyxel.btn(pyxel.KEY_A):
-            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[2], 0) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
+            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[2], 8) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
             self.chef.guardar_movimiento = 2
         elif pyxel.btn(pyxel.KEY_D):
-            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[3], 0) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
+            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[3], 8) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
             self.chef.guardar_movimiento = 3
         elif pyxel.btn(pyxel.KEY_W):
-            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[1], 0) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
+            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[1], 8) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
             self.chef.guardar_movimiento = 1
         elif pyxel.btn(pyxel.KEY_S): # Si tocas la tecla 6 
-            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[0], 0) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
+            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[0], 8) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
             self.chef.guardar_movimiento = 0
         else:
-            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[self.chef.guardar_movimiento], 0) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
+            pyxel.blt(self.chef.x, self.chef.y, *self.chef.imagen[self.chef.guardar_movimiento], 8) # Ponemos un , 0) al final del pyxel.blt para que tenga fondo trasnparente
 
         
         # Un texto para mostrar la posición del chef, los parámetros de
