@@ -1,18 +1,20 @@
 import random
 
 class Chef:
-    def __init__(self, x: int, y: int):
+    def __init__(self, x: int, y: int, mapa: list):
         # Índices donde se ubica el chef 
         self.x = x 
         self.y = y 
-
         # Atributos que manejan la posicion del chef, con píxeles (multiplicar por 16 (tamaño de la casilla))
         self.x_pixel = self.x * 16  
         self.y_pixel = self.y * 16
 
-        # Atributos que controlan lo que tiene delante el chef (por defecto mira hacia debajo)
-        self.x_delante = self.x
-        self.y_delante = self.y + 1
+        # Recibir el mapa que le manden desde tablero para poder controlar que esta delante del chef
+        self.mapa = mapa
+
+        # Variables que controlan la casilla delante de donde mira el chef (por defecto mira hacia abajo)
+        self.x_delante_chef = self.x + 1
+        self.y_delante_chef = self.y
 
         # La tupla es (banco_imagen, x_inicial, y_inicial, tamaño_horizontal, tamaño_vertical)
         # El atributo imagen va a contener distintas posicion que son las que representan cada accion 
@@ -77,16 +79,26 @@ class Chef:
         # Calculamos la posición a la que intenta ir
         if direccion == "arriba":
             self.y = max(0, self.y - VELOCIDAD)
-            self.y_delante = self.y - 1 # Desplazar una casilla más adelante del chef
+            self.y_delante_chef = self.y - 1 # Desplazar una casilla más adelante del chef
+            if self.mapa[self.x_delante_chef][self.y_delante_chef] != 0: # No se puede ir hacia allí
+                self.y_delante_chef = self.y + VELOCIDAD # Regresar el personaje a la posicion anterior
         elif direccion == "abajo": 
             self.y = min(alto_tablero - 1, self.y + VELOCIDAD) # Restarle 1, ya que la posicion de la matriz empieza en 0 
-            self.y_delante = self.y + 1 # Desplazar una casilla más adelante del chef
+            self.y_delante_chef = self.y + 1 # Desplazar una casilla más adelante del chef
+            if self.mapa[self.x_delante_chef][self.y_delante_chef] != 0: # No se puede ir hacia allí
+                self.y = self.y + VELOCIDAD # Regresar el personaje a la posicion anterior            
         elif direccion == "derecha":
             self.x = min(ancho_tablero - 1, self.x + VELOCIDAD) # Restarle 1, ya que la posicion de la matriz empieza en 0
-            self.x_delante = self.x + 1 # Desplazar una casilla más adelante del chef
+            self.x_delante_chef = self.x + 1 # Desplazar una casilla más adelante del chef
+            if self.mapa[self.x_delante_chef][self.y_delante_chef] != 0: # No se puede ir hacia allí
+                self.x = self.x + VELOCIDAD # Regresar el personaje a la posicion anterior
+                self.x_delante_chef += 1 # Regresar a la posicion anterior
         else: # direccion == "izquierda"
             self.x = max(0, self.x - VELOCIDAD)
-            self.x_delante = self.x + 1 # Desplazar una casilla más adelante del chef
+            self.x_delante_chef = self.x + 1 # Desplazar una casilla más adelante del chef
+            if self.mapa[self.x_delante_chef][self.y_delante_chef] != 0: # No se puede ir hacia allí
+                self.x = self.x + VELOCIDAD # Regresar el personaje a la posicion anterior
+                self.x_delante_chef -= 1 # Regresar a la posicion anterior
         
         # Hacer el cálculo de los píxeles (imprimir los píxeles)
         self.x_pixel = self.x * 16  

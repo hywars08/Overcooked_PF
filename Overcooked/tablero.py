@@ -42,7 +42,7 @@ class Tablero:
                 fila_objetos.append(nueva_casilla)
             self.casillas.append(fila_objetos)
 
-        self.chef = Chef(1, 4) # Posición inicial del chef, por defecto mira hacia abajo
+        self.chef = Chef(1, 4, self.mapa) 
 
         # En este init también necesitamos inicializar pyxel
         # Esta instrucción se usa para inicializar pyxel, consulta la API para
