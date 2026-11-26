@@ -88,20 +88,17 @@ class Chef:
             self.x = max(0, self.x - VELOCIDAD)
 
     # Método que devuelve la dirección que esta mirando el chef
-    def accion_chef(self):
-        accion = "ninguna"
+    def direccion_chef(self):
+        direccion = "ninguna"
         if pyxel.btn(pyxel.KEY_A): 
-            accion = "izquierda"
+            direccion = "izquierda"
         if pyxel.btn(pyxel.KEY_D): 
-            accion = "derecha"
+            direccion = "derecha"
         if pyxel.btn(pyxel.KEY_W):
-            accion = "arriba"
+            direccion = "arriba"
         if pyxel.btn(pyxel.KEY_S): 
-            accion = "abajo"
-         
-            
-            
-        return accion
+            direccion = "abajo"
+        return direccion
     # Método que en función de la acción que este haciendo el chef, devuelve el sprite
     def dibujar_chef(self, accion: str, casilla_pyxeles: int):
         # Calculamos la posición a la que intenta ir
@@ -113,7 +110,6 @@ class Chef:
             self.imagen = (0, 0, 48, 16, 16)
         elif accion == "izquierda":
             self.imagen = (0, 0, 32, 16, 16)
-        else:
-            self.imagen = self.imagen
+
         return pyxel.blt(self.x * casilla_pyxeles, self.y * casilla_pyxeles, *self.imagen, 0)
 

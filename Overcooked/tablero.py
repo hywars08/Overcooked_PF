@@ -95,9 +95,9 @@ class Tablero:
             pyxel.quit()
 
         # Acciones que puede hacer el chef
-        accion = self.chef.accion_chef()
-        if accion != "ninguna":
-            self.chef.mover(accion, Tablero.ANCHO_TABLERO, Tablero.ALTO_TABLERO)
+        direccion = self.chef.direccion_chef()
+        if direccion != "ninguna":
+            self.chef.mover(direccion, Tablero.ANCHO_TABLERO, Tablero.ALTO_TABLERO)
 
     def dibujar(self):
         """Este es el método de pyxel que se ejecuta en cada iteración del
@@ -114,13 +114,13 @@ class Tablero:
         # Dibujando al chef. Los parámetros de pyxel.blt son (x, y, tupla_sprite)
         # El * se usa para desempaquetar la tupla del sprite
         # En función de que tecla estes pulsando se muestra un sprite u otro
-        accion = self.chef.accion_chef()
-        self.chef.dibujar_chef(accion, Tablero.TAMANO_CASILLA)
+        direccion = self.chef.direccion_chef()
+        self.chef.dibujar_chef(direccion, Tablero.TAMANO_CASILLA)
     
         # Un texto para mostrar la posición del chef, los parámetros de
         # pyxel.text son (x, y, texto, color)
         pyxel.text(10, 10, f"({self.chef.x}, {self.chef.y})", 7)
 
-    def es_transitable(self, x: int, y: int):
-        return self.mapa[x][y] == 0
+
+        
             
