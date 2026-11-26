@@ -1,16 +1,16 @@
-import random
+import pyxel 
 
 class Chef:
-    def __init__(self, x: int, y: int, mapa: list):
+    def __init__(self, x: int, y: int):
         # Índices donde se ubica el chef 
         self.x = x 
         self.y = y 
-        # Atributos que manejan la posicion del chef, con píxeles (multiplicar por 16 (tamaño de la casilla))
-        self.x_pixel = self.x * 16  
-        self.y_pixel = self.y * 16
 
-        # Recibir el mapa que le manden desde tablero para poder controlar que esta delante del chef
-        self.mapa = mapa
+        # Dirección del chef
+        self.direccion = "abajo" # dirección por defecto
+
+        # Imagen por defecto del chef
+        self.imagen = (0, 0, 0, 16, 16)
 
         # Variables que controlan la casilla delante de donde mira el chef (por defecto mira hacia abajo)
         self.x_delante_chef = self.x + 1
@@ -19,8 +19,7 @@ class Chef:
         # La tupla es (banco_imagen, x_inicial, y_inicial, tamaño_horizontal, tamaño_vertical)
         # El atributo imagen va a contener distintas posicion que son las que representan cada accion 
         # imagen[0] = abajo ; imagen[1] = arriba ; imagen[2] = izquierda ; imagen[3] = derecha
-        self.imagen = ((0, 0, 0, 16, 16), (0, 0, 16, 16, 16), (0, 0, 32, 16, 16), (0, 0, 48, 16, 16))
-        self.guardar_movimiento = 0 # Atributo que guarda el último movimiento el chef registrado 
+        
     
     @property
     def x(self) -> int:
@@ -58,11 +57,10 @@ class Chef:
 
     @imagen.setter
     def imagen(self, imagen: tuple):
-        for i in range(len(imagen)):
-            if not isinstance(imagen, tuple):
-                raise TypeError("La imagen debe ser una tupla con 5 elementos")
-            elif len(imagen[i]) != 5:
-                raise ValueError("La imagen debe ser una tupla con 5 elementos")
+        if not isinstance(imagen, tuple):
+            raise TypeError("La imagen debe ser una tupla")
+        elif len(imagen) != 5:
+            raise ValueError("La imagen debe ser una tupla con 5 elementos")
         self.__imagen = imagen
      
     # Método que controla el movimiento del chef
@@ -71,7 +69,7 @@ class Chef:
         # TAMANO_IMAGEN = 16 
         VELOCIDAD = 1 
 
-        # Dirección a la que se mueve
+        # ANcho del tablero
         self.direccion = direccion
         self.ancho_tablero = ancho_tablero
         self.alto_tablero = alto_tablero
@@ -79,37 +77,43 @@ class Chef:
         # Calculamos la posición a la que intenta ir
         if direccion == "arriba":
             self.y = max(0, self.y - VELOCIDAD)
-            self.y_delante_chef = self.y - 1 # Desplazar una casilla más adelante del chef
-            if self.mapa[self.x_delante_chef][self.y_delante_chef] != 0: # No se puede ir hacia allí
-                self.y_delante_chef = self.y + VELOCIDAD # Regresar el personaje a la posicion anterior
+
         elif direccion == "abajo": 
             self.y = min(alto_tablero - 1, self.y + VELOCIDAD) # Restarle 1, ya que la posicion de la matriz empieza en 0 
-            self.y_delante_chef = self.y + 1 # Desplazar una casilla más adelante del chef
-            if self.mapa[self.x_delante_chef][self.y_delante_chef] != 0: # No se puede ir hacia allí
-                self.y = self.y + VELOCIDAD # Regresar el personaje a la posicion anterior            
+         
         elif direccion == "derecha":
             self.x = min(ancho_tablero - 1, self.x + VELOCIDAD) # Restarle 1, ya que la posicion de la matriz empieza en 0
-            self.x_delante_chef = self.x + 1 # Desplazar una casilla más adelante del chef
-            if self.mapa[self.x_delante_chef][self.y_delante_chef] != 0: # No se puede ir hacia allí
-                self.x = self.x + VELOCIDAD # Regresar el personaje a la posicion anterior
-                self.x_delante_chef += 1 # Regresar a la posicion anterior
-        else: # direccion == "izquierda"
-            self.x = max(0, self.x - VELOCIDAD)
-            self.x_delante_chef = self.x + 1 # Desplazar una casilla más adelante del chef
-            if self.mapa[self.x_delante_chef][self.y_delante_chef] != 0: # No se puede ir hacia allí
-                self.x = self.x + VELOCIDAD # Regresar el personaje a la posicion anterior
-                self.x_delante_chef -= 1 # Regresar a la posicion anterior
-        
-        # Hacer el cálculo de los píxeles (imprimir los píxeles)
-        self.x_pixel = self.x * 16  
-        self.y_pixel = self.y * 16
 
-        # Asignar la nueva posicion calculada y controlar que no se salga de la pantalla
-        # La función máx se encarga de asegurar que el valor de la posición nunca baja de 0 (no se salga de la pantalla)
-        # Comprobar si la poscion se ha salido o no de la pantalla (hay que restarle 16 porque es el tamaño del sprite) 
-        # if posicion_nueva_x > ancho_tablero - TAMANO_IMAGEN:
-        #     posicion_nueva_x = ancho_tablero - TAMANO_IMAGEN 
-        # if posicion_nueva_y > alto_tablero - TAMANO_IMAGEN:
-        #     posicion_nueva_y = alto_tablero - TAMANO_IMAGEN
-        # self.x = max(0, posicion_nueva_x) 
-        # self.y = max(0, posicion_nueva_y)    
+        else: # self.direccion == "izquierda":
+            self.x = max(0, self.x - VELOCIDAD)
+
+    # Método que devuelve la dirección que esta mirando el chef
+    def accion_chef(self):
+        accion = "ninguna"
+        if pyxel.btn(pyxel.KEY_A): 
+            accion = "izquierda"
+        if pyxel.btn(pyxel.KEY_D): 
+            accion = "derecha"
+        if pyxel.btn(pyxel.KEY_W):
+            accion = "arriba"
+        if pyxel.btn(pyxel.KEY_S): 
+            accion = "abajo"
+         
+            
+            
+        return accion
+    # Método que en función de la acción que este haciendo el chef, devuelve el sprite
+    def dibujar_chef(self, accion: str, casilla_pyxeles: int):
+        # Calculamos la posición a la que intenta ir
+        if accion == "arriba":
+            self.imagen = (0, 0, 16, 16, 16)
+        elif accion == "abajo": 
+            self.imagen = (0, 0, 0, 16, 16)
+        elif accion == "derecha":
+            self.imagen = (0, 0, 48, 16, 16)
+        elif accion == "izquierda":
+            self.imagen = (0, 0, 32, 16, 16)
+        else:
+            self.imagen = self.imagen
+        return pyxel.blt(self.x * casilla_pyxeles, self.y * casilla_pyxeles, *self.imagen, 0)
+

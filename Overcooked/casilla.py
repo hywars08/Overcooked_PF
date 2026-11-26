@@ -12,7 +12,6 @@ class Casilla:
         self.y = 32 + fila * self.TAMANO
         self.tipo = tipo
         self.sprite = sprite
-        self.transitable = transitable
         # Aquí se guardará el ingrediente o plato apoyado sobre esta mesa (None si está vacía)
         self.objeto_encima = None
 
