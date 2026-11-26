@@ -1,4 +1,5 @@
 import pyxel 
+from plato import Plato 
 
 class Chef:
     SPRITES_CHEF = {
@@ -27,11 +28,15 @@ class Chef:
                 "abajo": pyxel.KEY_DOWN,
                 "izquierda": pyxel.KEY_LEFT,
                 "derecha": pyxel.KEY_RIGHT,
-                "interactuar": pyxel.KEY_LCTRL
+                "interactuar": pyxel.KEY_RSHIFT
             }
             self.sprite_x = 16
+
+        # Atributo que controla que objeto lleva
+        self.objeto = "ninguno"
+
         # Dirección del chef
-        self.direccion = "ninguna" # Por defecto mira hacia abajo el chef
+        self.direccion = "abajo" # Por defecto mira hacia abajo el chef
 
         # Imagen por defecto del chef
         self.imagen = (0, 0, 0, 16, 16)
@@ -130,11 +135,24 @@ class Chef:
             self.imagen = (0, 0, 48, 16, 16)
         else: # izquierda
             self.imagen = (0, 0, 32, 16, 16)
-
+        
         return pyxel.blt(self.x * casilla_pyxeles, 32 + self.y * casilla_pyxeles, *self.imagen, 0) # Sumar 32 píxeles superiores (hueco para el HUD)
 
-    # Método que comprueba si esta pulsando una tecla o no
-    def esta_pulsando_tecla(self):
-        return (pyxel.btn(self.controles["arriba"]) or pyxel.btn(self.controles["abajo"]) or pyxel.btn(self.controles["izquierda"]) or pyxel.btn(self.controles["derecha"]) or pyxel.btn(self.controles["interactuar"]))
+    def tiene_objeto(self):
+        if self.tiene_objeto != "ninguno":
+            tiene_objeto = True
+        else:
+            tiene_objeto = False
+
+        return tiene_objeto
+    
+    def interactuar(self, casilla_delante: int):
+        if casilla_delante == 7:
+            self.objeto = Plato()
+        print("pulsado!")
+        return True
+                
+                
+            
 
             
