@@ -9,7 +9,7 @@ class Casilla:
         self.col = col
         # Coordenadas exactas en píxeles (sumando los 32 px del tablero de comandas)
         self.x = col * self.TAMANO
-        self.y = 32 + fila * self.TAMANO
+        self.y = fila * self.TAMANO
         self.tipo = tipo
         self.sprite = sprite
         # Aquí se guardará el ingrediente o plato apoyado sobre esta mesa (None si está vacía)
@@ -17,7 +17,7 @@ class Casilla:
 
     def dibujar(self):
         # 1. Dibuja el suelo o la encimera base
-        pyxel.blt(self.x, self.y, *self.sprite)
+        pyxel.blt(self.x, self.y + 32, *self.sprite)
 
         # 2. Si tiene un ingrediente o plato encima, lo dibuja automáticamente
         if self.objeto_encima is not None:

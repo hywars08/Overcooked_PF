@@ -14,8 +14,7 @@ class Tablero:
     }
     # Declaración de constantes
     TAMANO_CASILLA = 16 # SOn 16 píxeles
-    ANCHO_TABLERO = 12
-    ALTO_TABLERO = 11
+    
     def __init__(self, ancho: int, alto: int):
         # Estableciendo los atributos
         self.ancho = ancho # Ancho del tablero
@@ -44,8 +43,9 @@ class Tablero:
                 fila_objetos.append(nueva_casilla)
             self.casillas.append(fila_objetos)
 
-        self.chef = Chef(1, 4) 
-
+        self.chef1 = Chef(1, 2, "jugador1")
+        self.chef2 = Chef(1, 6, "jugador2") 
+        self.chefs = [self.chef1, self.chef2]
         # En este init también necesitamos inicializar pyxel
         # Esta instrucción se usa para inicializar pyxel, consulta la API para
         # ver más parámetros
@@ -94,10 +94,18 @@ class Tablero:
         if pyxel.btn(pyxel.KEY_Q):
             pyxel.quit()
 
-        # Acciones que puede hacer el chef
-        direccion = self.chef.direccion_chef()
-        if direccion != "ninguna":
-            self.chef.mover(direccion, Tablero.ANCHO_TABLERO, Tablero.ALTO_TABLERO)
+        # Movimiento de los chefs
+        for chef in self.chefs:
+            if chef.esta_pulsando_tecla():
+
+                # Cambiar la dirección del chef
+                chef.direccion_chef()
+
+                # Comprobar si se puede mover
+                if self.casilla_delante_chef(chef) == 0:
+                    chef.mover(len(self.mapa[0]), len(self.mapa))
+
+                
 
     def dibujar(self):
         """Este es el método de pyxel que se ejecuta en cada iteración del
@@ -111,16 +119,35 @@ class Tablero:
             for casilla in fila:
                 casilla.dibujar()
 
-        # Dibujando al chef. Los parámetros de pyxel.blt son (x, y, tupla_sprite)
-        # El * se usa para desempaquetar la tupla del sprite
-        # En función de que tecla estes pulsando se muestra un sprite u otro
-        direccion = self.chef.direccion_chef()
-        self.chef.dibujar_chef(direccion, Tablero.TAMANO_CASILLA)
-    
+        # Dibujando a los chefs. 
+        for chef in self.chefs:
+            chef.dibujar_chef(Tablero.TAMANO_CASILLA)
+        
         # Un texto para mostrar la posición del chef, los parámetros de
         # pyxel.text son (x, y, texto, color)
-        pyxel.text(10, 10, f"({self.chef.x}, {self.chef.y})", 7)
+        pyxel.text(10, 10, f"({self.chef1.x}, {self.chef1.y})", 7)
+        pyxel.text(12, 12, f"({self.chef2.x}, {self.chef2.y})", 7)
 
+    def casilla_delante_chef(self, chef: Chef):
+        x_delante = chef.x
+        y_delante = chef.y 
+
+        if chef.direccion == "arriba":
+            y_delante -= 1
+        elif chef.direccion == "abajo":
+            y_delante += 1
+        elif chef.direccion == "derecha":
+            x_delante += 1
+        else: 
+            x_delante -= 1
+
+        # Comprobar que esta dentro de los bordes
+        if 0 <= y_delante < len(self.mapa) and 0 <= x_delante < len(self.mapa[0]): 
+            return self.mapa[y_delante][x_delante]
+        else:
+            return -1 # casilla no válida
+        
+        
 
         
             

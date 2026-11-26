@@ -1,26 +1,41 @@
 import pyxel 
 
 class Chef:
-    def __init__(self, x: int, y: int):
+    SPRITES_CHEF = {
+        
+    }
+    def __init__(self, x: int, y: int, jugador: str):
         # Índices donde se ubica el chef 
         self.x = x 
         self.y = y 
 
+        # Diferenciar los controles en función del jugador que sea.
+        self.jugador = jugador
+
+        if self.jugador == "jugador1":
+            self.controles = {
+                "arriba": pyxel.KEY_W,
+                "abajo": pyxel.KEY_S,
+                "izquierda": pyxel.KEY_A,
+                "derecha": pyxel.KEY_D,
+                "interactuar": pyxel.KEY_SPACE
+            }
+            self.sprite_x = 0
+        else: # jugador == 2:
+            self.controles = {
+                "arriba": pyxel.KEY_UP,
+                "abajo": pyxel.KEY_DOWN,
+                "izquierda": pyxel.KEY_LEFT,
+                "derecha": pyxel.KEY_RIGHT,
+                "interactuar": pyxel.KEY_LCTRL
+            }
+            self.sprite_x = 16
         # Dirección del chef
-        self.direccion = "abajo" # dirección por defecto
+        self.direccion = "ninguna" # Por defecto mira hacia abajo el chef
 
         # Imagen por defecto del chef
         self.imagen = (0, 0, 0, 16, 16)
 
-        # Variables que controlan la casilla delante de donde mira el chef (por defecto mira hacia abajo)
-        self.x_delante_chef = self.x + 1
-        self.y_delante_chef = self.y
-
-        # La tupla es (banco_imagen, x_inicial, y_inicial, tamaño_horizontal, tamaño_vertical)
-        # El atributo imagen va a contener distintas posicion que son las que representan cada accion 
-        # imagen[0] = abajo ; imagen[1] = arriba ; imagen[2] = izquierda ; imagen[3] = derecha
-        
-    
     @property
     def x(self) -> int:
         return self.__x
@@ -30,12 +45,12 @@ class Chef:
         return self.__y
 
     @property
+    def jugador(self) -> int:
+        return self.__jugador
+    
+    @property
     def imagen(self) -> tuple:
         return self.__imagen
-
-    @property
-    def tiene_plato(self) -> bool:
-        return self.__tiene_plato
 
     @x.setter
     def x(self, x: int):
@@ -62,54 +77,64 @@ class Chef:
         elif len(imagen) != 5:
             raise ValueError("La imagen debe ser una tupla con 5 elementos")
         self.__imagen = imagen
-     
+
+    @jugador.setter
+    def jugador(self, jugador: str):
+        if not isinstance(jugador, str):
+            raise TypeError("El jugador debe ser un string")
+        elif jugador != "jugador1" and jugador != "jugador2":
+            raise ValueError("El jugador debe ser 1 o 2")
+        else:
+            self.__jugador = jugador
     # Método que controla el movimiento del chef
-    def mover(self, direccion: str, ancho_tablero: int, alto_tablero: int):
+    def mover(self, ancho_tablero: int, alto_tablero: int):
         # Declaración de constantes 
-        # TAMANO_IMAGEN = 16 
         VELOCIDAD = 1 
 
-        # ANcho del tablero
-        self.direccion = direccion
+        # Ancho del tablero
         self.ancho_tablero = ancho_tablero
         self.alto_tablero = alto_tablero
 
         # Calculamos la posición a la que intenta ir
-        if direccion == "arriba":
+        if self.direccion == "arriba":
             self.y = max(0, self.y - VELOCIDAD)
 
-        elif direccion == "abajo": 
+        elif self.direccion == "abajo": 
             self.y = min(alto_tablero - 1, self.y + VELOCIDAD) # Restarle 1, ya que la posicion de la matriz empieza en 0 
-         
-        elif direccion == "derecha":
+        
+        elif self.direccion == "derecha":
             self.x = min(ancho_tablero - 1, self.x + VELOCIDAD) # Restarle 1, ya que la posicion de la matriz empieza en 0
 
-        else: # self.direccion == "izquierda":
+        else:
             self.x = max(0, self.x - VELOCIDAD)
 
-    # Método que devuelve la dirección que esta mirando el chef
+    # Método que modifica la dirección que esta mirando el chef
     def direccion_chef(self):
-        direccion = "ninguna"
-        if pyxel.btn(pyxel.KEY_A): 
-            direccion = "izquierda"
-        if pyxel.btn(pyxel.KEY_D): 
-            direccion = "derecha"
-        if pyxel.btn(pyxel.KEY_W):
-            direccion = "arriba"
-        if pyxel.btn(pyxel.KEY_S): 
-            direccion = "abajo"
-        return direccion
+        if pyxel.btn(self.controles["izquierda"]): 
+            self.direccion = "izquierda"
+        if pyxel.btn(self.controles["derecha"]): 
+            self.direccion = "derecha"
+        if pyxel.btn(self.controles["arriba"]):
+            self.direccion = "arriba"
+        if pyxel.btn(self.controles["abajo"]): 
+            self.direccion = "abajo"
+
     # Método que en función de la acción que este haciendo el chef, devuelve el sprite
-    def dibujar_chef(self, accion: str, casilla_pyxeles: int):
+    def dibujar_chef(self, casilla_pyxeles: int):
         # Calculamos la posición a la que intenta ir
-        if accion == "arriba":
+        if self.direccion == "arriba":
             self.imagen = (0, 0, 16, 16, 16)
-        elif accion == "abajo": 
+        elif self.direccion == "abajo": 
             self.imagen = (0, 0, 0, 16, 16)
-        elif accion == "derecha":
+        elif self.direccion == "derecha":
             self.imagen = (0, 0, 48, 16, 16)
-        elif accion == "izquierda":
+        else: # izquierda
             self.imagen = (0, 0, 32, 16, 16)
 
-        return pyxel.blt(self.x * casilla_pyxeles, self.y * casilla_pyxeles, *self.imagen, 0)
+        return pyxel.blt(self.x * casilla_pyxeles, 32 + self.y * casilla_pyxeles, *self.imagen, 0) # Sumar 32 píxeles superiores (hueco para el HUD)
 
+    # Método que comprueba si esta pulsando una tecla o no
+    def esta_pulsando_tecla(self):
+        return (pyxel.btn(self.controles["arriba"]) or pyxel.btn(self.controles["abajo"]) or pyxel.btn(self.controles["izquierda"]) or pyxel.btn(self.controles["derecha"]) or pyxel.btn(self.controles["interactuar"]))
+
+            
