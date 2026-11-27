@@ -41,4 +41,5 @@ class Casilla:
             imagen = (1, 16, 80, self.TAMANO, self.TAMANO)
         elif self.tipo_casilla == 9: 
             imagen = (1, 0, 92, self.TAMANO, self.TAMANO)
+            
         return imagen
