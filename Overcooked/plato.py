@@ -31,7 +31,6 @@ class Plato(Item):
         if otro_plato is not self:
             otro_plato.cargar(self.vaciar())
 
-    def dejar(self,):
         
 
 
