@@ -135,7 +135,10 @@ class Chef:
             self.imagen = (0, 0, 48, 16, 16)
         else: # izquierda
             self.imagen = (0, 0, 32, 16, 16)
-        
+
+        if isinstance(self.objeto, Plato):
+            banco, x, y, ancho, alto = self.imagen
+            self.imagen = (banco, x, y + 64, ancho, alto)
         pyxel.blt(self.x * casilla_pyxeles, 32 + self.y * casilla_pyxeles, *self.imagen, 0) # Sumar 32 píxeles superiores (hueco para el HUD)
     
     def tiene_objeto(self):
