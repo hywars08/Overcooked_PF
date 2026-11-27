@@ -136,10 +136,10 @@ class Chef:
         else: # izquierda
             self.imagen = (0, 0, 32, 16, 16)
         
-        return pyxel.blt(self.x * casilla_pyxeles, 32 + self.y * casilla_pyxeles, *self.imagen, 0) # Sumar 32 píxeles superiores (hueco para el HUD)
-
+        pyxel.blt(self.x * casilla_pyxeles, 32 + self.y * casilla_pyxeles, *self.imagen, 0) # Sumar 32 píxeles superiores (hueco para el HUD)
+    
     def tiene_objeto(self):
-        if self.tiene_objeto != "ninguno":
+        if self.objeto != "ninguno":
             tiene_objeto = True
         else:
             tiene_objeto = False
@@ -147,12 +147,16 @@ class Chef:
         return tiene_objeto
     
     def interactuar(self, casilla_delante: int):
-        if casilla_delante == 7:
-            self.objeto = Plato()
-        print("pulsado!")
-        return True
-                
-                
+        if pyxel.btnp(self.controles["interactuar"]):
+            if self.objeto == "ninguno":
+                if casilla_delante == 7: # Caja de platos
+                    self.objeto = Plato(self.x, self.y) # Pasarle la posicion del chef
+                    print("pulsado!")
+                    return True
+            else:
+                if casilla_delante == 1: # Encimera
+                    print("encimera")
+                    
             
 
             

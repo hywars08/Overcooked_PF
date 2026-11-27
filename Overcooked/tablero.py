@@ -3,7 +3,7 @@ import pyxel
 # Importando la clase Chef para poder usarla en la clase Tablero
 from chef import Chef
 from casilla import Casilla
-from item import Item
+from plato import Plato
 
 class Tablero:
     # Constantes de Tablero
@@ -129,9 +129,15 @@ class Tablero:
         # Dibujando a los chefs. 
         for chef in self.chefs:
             chef.dibujar_chef(Tablero.TAMANO_CASILLA)
-            
+
             if chef.interactuar(self.casilla_delante_chef(chef)):
                 pyxel.text(chef.x * 16, ((chef.y) * 16) + 32 - 8, "Accion", 7)
+
+            if chef.objeto != "ninguno":
+                chef.objeto.x = chef.x
+                chef.objeto.y = chef.y
+                chef.objeto.dibujar_item(Tablero.TAMANO_CASILLA, chef.tiene_objeto(), chef.direccion)
+            
         # Un texto para mostrar la posición del chef, los parámetros de
         # pyxel.text son (x, y, texto, color)
         pyxel.text(10, 10, f"({self.chef1.x}, {self.chef1.y})", 7)
