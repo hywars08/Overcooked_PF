@@ -1,6 +1,4 @@
-
 from item import Item
-
 
 class Plato(Item):
     #Representa un plato y su contenido.
@@ -32,6 +30,9 @@ class Plato(Item):
         #Vuelca el contenido de este plato en otro.
         if otro_plato is not self:
             otro_plato.cargar(self.vaciar())
+
+    def dejar(self,):
+        
 
 
     

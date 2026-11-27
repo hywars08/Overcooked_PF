@@ -26,6 +26,18 @@ class Tablero:
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Fila 7
             [6, 7, 1, 1, 1, 9, 1, 1, 1, 8, 1, 1]   # Fila 8
         ]
+        # Matriz secundaria que guarda que hay en cada posicion de objetos
+        self.objetos_tablero = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Fila 0
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Fila 1
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Fila 2
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Fila 3
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Fila 4
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Fila 5
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Fila 6
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Fila 7
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   # Fila 8            
+        ]
         # Transformamos la matriz de números en una matriz de objetos Casilla
         self.casillas = []
         for i in range(len(self.mapa)):
@@ -98,7 +110,6 @@ class Tablero:
 
             elif pyxel.btn(chef.controles["interactuar"]):
                 chef.interactuar(self.casilla_delante_chef(chef))
-                print("prueba")
             
 
     def dibujar(self):
@@ -116,9 +127,6 @@ class Tablero:
         # Dibujando a los chefs. 
         for chef in self.chefs:
             chef.dibujar_chef(Tablero.TAMANO_CASILLA)
-
-            if chef.interactuar(self.casilla_delante_chef(chef)):
-                pyxel.text(chef.x * 16, ((chef.y) * 16) + 32 - 8, "Accion", 7)
 
             # chef.objeto.dibujar_item(Tablero.TAMANO_CASILLA, chef.tiene_objeto(), chef.direccion)
                     

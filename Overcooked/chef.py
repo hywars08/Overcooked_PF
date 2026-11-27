@@ -123,20 +123,32 @@ class Chef:
 
     # Método que en función de la acción que este haciendo el chef, devuelve el sprite
     def dibujar_chef(self, casilla_pyxeles: int):
-        # Calculamos la posición a la que intenta ir
-        if self.direccion == "arriba":
-            self.imagen = (0, 0, 16, 16, 16)
-        elif self.direccion == "abajo": 
-            self.imagen = (0, 0, 0, 16, 16)
-        elif self.direccion == "derecha":
-            self.imagen = (0, 0, 48, 16, 16)
-        else: # izquierda
-            self.imagen = (0, 0, 32, 16, 16)
+        # Comprobación de si tiene objeto
+        if self.tiene_objeto():
+            # El objeto es un plato
+             if isinstance(self.objeto, Plato):
+                # Filtrar el sprite del chef con el plato dependiendo de la dirección
+                if self.direccion == "arriba":
+                    self.imagen = (0, 0, 16, 16, 16) # La imagen no cambia porque no se ve el plato desde atras
+                elif self.direccion == "abajo": 
+                    self.imagen = (0, 16, 0, 16, 16)
+                elif self.direccion == "derecha":
+                    self.imagen = (0, 16, 48, 16, 16)
+                else: # izquierda
+                    self.imagen = (0, 16, 32, 16, 16)
+                
 
-        if isinstance(self.objeto, Plato):
-            banco, x, y, ancho, alto = self.imagen
-            self.imagen = (banco, x, y + 64, ancho, alto)
-        pyxel.blt(self.x * casilla_pyxeles, 32 + self.y * casilla_pyxeles, *self.imagen, 0) # Sumar 32 píxeles superiores (hueco para el HUD)
+        else: # No tiene objeto
+            if self.direccion == "arriba":
+                self.imagen = (0, 0, 16, 16, 16)
+            elif self.direccion == "abajo": 
+                self.imagen = (0, 0, 0, 16, 16)
+            elif self.direccion == "derecha":
+                self.imagen = (0, 0, 48, 16, 16)
+            else: # izquierda
+                self.imagen = (0, 0, 32, 16, 16)
+
+        pyxel.blt(self.x * casilla_pyxeles, 32 + self.y * casilla_pyxeles, *self.imagen, 8) # Sumar 32 píxeles superiores (hueco para el HUD)
     
     def tiene_objeto(self):
         if self.objeto != "ninguno":
@@ -165,9 +177,11 @@ class Chef:
             elif casilla_delante == 7: # Caja de Patatas
                 print("patata")
             elif casilla_delante == 8: # Platos
+                self.objeto = Plato(self.x, self.y)
                 print("plato")
         else:
             if casilla_delante == 1: # Encimera
+                self.objeto = "ninguna"
                 print("encimera")
                     
             
