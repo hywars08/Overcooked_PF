@@ -2,9 +2,6 @@ import pyxel
 from plato import Plato 
 
 class Chef:
-    SPRITES_CHEF = {
-        
-    }
     def __init__(self, x: int, y: int, jugador: str):
         # Índices donde se ubica el chef 
         self.x = x 
@@ -91,6 +88,7 @@ class Chef:
             raise ValueError("El jugador debe ser 1 o 2")
         else:
             self.__jugador = jugador
+
     # Método que controla el movimiento del chef
     def mover(self, ancho_tablero: int, alto_tablero: int):
         # Declaración de constantes 
@@ -109,7 +107,6 @@ class Chef:
         
         elif self.direccion == "derecha":
             self.x = min(ancho_tablero - 1, self.x + VELOCIDAD) # Restarle 1, ya que la posicion de la matriz empieza en 0
-
         else:
             self.x = max(0, self.x - VELOCIDAD)
 
@@ -145,17 +142,29 @@ class Chef:
             tiene_objeto = False
 
         return tiene_objeto
-    
+
+    def que_objeto(self):
+        return self.objeto
+
+
     def interactuar(self, casilla_delante: int):
-        if pyxel.btnp(self.controles["interactuar"]):
-            if self.objeto == "ninguno":
-                if casilla_delante == 7: # Caja de platos
-                    self.objeto = Plato(self.x, self.y) # Pasarle la posicion del chef
-                    print("pulsado!")
-                    return True
-            else:
-                if casilla_delante == 1: # Encimera
-                    print("encimera")
+        # Comprobar si tiene o no objeto
+        if not self.tiene_objeto():
+            if casilla_delante == 3: # Caja de cebolla
+                print("cebolla")
+            elif casilla_delante == 4: # Caja de Huevos
+                print("huevo")
+            elif casilla_delante == 5: # Caja de Chorizo
+                print("chorizo")
+            elif casilla_delante == 6: # Caja de Tomates
+                print("tomate")
+            elif casilla_delante == 7: # Caja de Patatas
+                print("patata")
+            elif casilla_delante == 8: # Platos
+                print("plato")
+        else:
+            if casilla_delante == 1: # Encimera
+                print("encimera")
                     
             
 
