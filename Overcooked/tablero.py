@@ -96,7 +96,7 @@ class Tablero:
                 if self.casilla_delante_chef(chef) == 0:
                     chef.mover(len(self.mapa[0]), len(self.mapa))
 
-            if pyxel.btnp(chef.controles["interactuar"]):
+            elif pyxel.btn(chef.controles["interactuar"]):
                 chef.interactuar(self.casilla_delante_chef(chef))
                 print("prueba")
             

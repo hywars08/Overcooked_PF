@@ -152,6 +152,7 @@ class Chef:
 
     def interactuar(self, casilla_delante: int):
         # Comprobar si tiene o no objeto
+        
         if not self.tiene_objeto():
             if casilla_delante == 3: # Caja de cebolla
                 print("cebolla")
